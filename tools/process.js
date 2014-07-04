@@ -16,7 +16,7 @@ process.stdin.pipe(split()).on('data', function(line) {
 			line
 			// EasyWeather defaults to tab-separated, sometimes I remember to
 			// choose comma but sometimes I don't
-			.replace(/\t/, ',')
+			.replace(/\t/g, ',')
 
 			// Remove degree symbols in the header
 			.replace(/°/g, '')
@@ -28,7 +28,7 @@ process.stdin.pipe(split()).on('data', function(line) {
 			.replace(/^[0-9]*,/, '')
 
 			// EasyWeather uses dd-mm-yyyy. I prefer mm/dd/yyyy.
-			.replace(/^([0-9]*)-([0-9]*)-([0-9]*)/, '$2/$1/$3,')
+			.replace(/^([0-9]*)-([0-9]*)-([0-9]*)/, '$2/$1/$3')
 
 			.concat('\n')
 		);
