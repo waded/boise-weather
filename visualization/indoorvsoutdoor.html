@@ -8,8 +8,7 @@
 		d3.csv("../boise-weather.csv")
 			.row(function(d) { return {
 				date: new Date(d['Time']).getTime(),
-				indoor: +d['Indoor Temperature(F)'],
-				outdoor: +d['Outdoor Temperature(F)']
+				outdoor: (+d['Outdoor Temperature(F)'])
 			}})
 			.get(function(error, rows)
 			{
@@ -17,19 +16,23 @@
 				// (Hourly data is fine)
 				rows = rows.filter(function(d,i) { return i % 2 == 0 });
 
+				// There are a couple '---' temperatures in the CSV.
+				// Not sure where those come from, and should clean them up
+				// in processing instead, but for now filter them out here
+				rows = rows.filter(function(d,i) { return !isNaN(d.outdoor) })
+
 				nv.addGraph(function() {
 					var chart = nv.models.lineWithFocusChart()
-						.x(function(d) { return d[0] })
-						.y(function(d) { return d[1] })
+						.x(function(d) { return d.date })
+						.y(function(d) { return d.outdoor })
 
-					chart.xAxis.tickFormat(function(d) { return d3.time.format('%m/%d %I:%m %p')(new Date(d)) });
+					chart.xAxis.tickFormat(function(d) { return d3.time.format('%m/%d %H:%m')(new Date(d)) });
 					chart.x2Axis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 					chart.yAxis.tickFormat(function(d) { return d + " F"});
 
 					d3.select('#chart svg')
 						.datum([
-							{key:'Indoor', values: rows.map(function(d) { return [d.date, d.indoor] })},
-							{key:'Outdoor', values: rows.map(function(d) { return [d.date, d.outdoor] })}
+							{key:'Outdoor Temperature (F)', values: rows}
 						])
 						.call(chart);
 
@@ -42,6 +45,7 @@
 	</script>
 </head>
 <body>
+	<h1>Hourly outdoor temperature from <a href="../boise-weather.csv">boise-weather.csv</a>
 	<div id="chart" style="height:400px">
 		<svg></svg>
 	</div>
