@@ -30,6 +30,8 @@
 					chart.x2Axis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 					chart.yAxis.tickFormat(function(d) { return d + " F"});
 
+					chart.brushExtent([Date.now() - 1000*60*60*24*30 ,Date.now()])
+
 					d3.select('#chart svg')
 						.datum([
 							{key:'Outdoor Temperature (F)', values: rows}
