@@ -5,8 +5,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.js"></script>
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.css"></link>
 	<script>
-		var dateFormat = function(d) { return d3.time.format('%m/%d/%Y')(new Date(d)) };
-
 		d3.csv("../boise-weather.csv")
 			.row(function(d) { return {
 				date: new Date(d['Time']).getTime(),
@@ -15,21 +13,23 @@
 			}})
 			.get(function(error, rows)
 			{
-				// Now with 400% less sucking the life out of my computer
-				rows = rows.filter(function(d,i) { return i % 4 == 0 });
+				// Now with 200% less sucking the life out of my computer
+				// (Hourly data is fine)
+				rows = rows.filter(function(d,i) { return i % 2 == 0 });
 
 				nv.addGraph(function() {
 					var chart = nv.models.lineWithFocusChart()
-				 		.x(function(d) { return d[0] })
-                  		.y(function(d) { return d[1] })
+						.x(function(d) { return d[0] })
+						.y(function(d) { return d[1] })
 
-					chart.xAxis.tickFormat(dateFormat);
-					chart.x2Axis.tickFormat(dateFormat);
+					chart.xAxis.tickFormat(function(d) { return d3.time.format('%m/%d %I:%m %p')(new Date(d)) });
+					chart.x2Axis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+					chart.yAxis.tickFormat(function(d) { return d + " F"});
 
 					d3.select('#chart svg')
 						.datum([
 							{key:'Indoor', values: rows.map(function(d) { return [d.date, d.indoor] })},
-							{key:'Dutdoor', values: rows.map(function(d) { return [d.date, d.outdoor] })}
+							{key:'Outdoor', values: rows.map(function(d) { return [d.date, d.outdoor] })}
 						])
 						.call(chart);
 
