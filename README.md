@@ -4,4 +4,6 @@ I plan to add to it approximately every 3 months (every time the memory on the w
 
 Note the *Time* column is in mm-dd-yyyy h:mm format.
 
-Also in this repository is a visualization of outdoor temperatures as recorded in the CSV: http://waded.github.io/boise-weather/visualization/outdoor.html
+Also in this repository is visualization of the outdoor temperatures from the CSV. See it here:
+
+http://waded.github.io/boise-weather/visualization/outdoor.html
